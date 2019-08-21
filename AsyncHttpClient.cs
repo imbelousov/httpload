@@ -87,11 +87,20 @@ namespace httpload
 			request.AllowWriteStreamBuffering = false;
 			request.KeepAlive = keepAlive;
 			if(headers != null && headers.Count > 0)
+			{
+				string contentType;
+				if(!string.IsNullOrEmpty(contentType = headers.Get(ContentTypeHeader)))
+				{
+					headers.Remove(ContentTypeHeader);
+					request.ContentType = contentType;
+				}
 				request.Headers.Add(headers);
+			}
 			return request;
 		}
 
 		private const string UserAgent = "httpload/1.2";
+		private const string ContentTypeHeader = "Content-Type";
 	}
 
 	internal struct HttpResult
